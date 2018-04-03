@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2027
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{87615B7B-2B7B-4E79-AD51-CC1063A4FC66}"
+	ProjectSection(SolutionItems) = preProject
+		..\.gitattributes = ..\.gitattributes
+		..\.gitignore = ..\.gitignore
+		..\build.cake = ..\build.cake
+		..\build.ps1 = ..\build.ps1
+		..\CHANGELOG.md = ..\CHANGELOG.md
+		..\LICENSE = ..\LICENSE
+		..\README.md = ..\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".files", ".files", "{349E449A-8D23-4CE6-BF0A-E22A65F2ABBF}"
+	ProjectSection(SolutionItems) = preProject
+		.files\AssemblyInfo.Common.cs = .files\AssemblyInfo.Common.cs
+		.files\AssemblyInfo.Version.cs = .files\AssemblyInfo.Version.cs
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{349E449A-8D23-4CE6-BF0A-E22A65F2ABBF} = {87615B7B-2B7B-4E79-AD51-CC1063A4FC66}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {83E67DA6-5092-4BD3-A14F-A99E7D9B3ECE}
+	EndGlobalSection
+EndGlobal
