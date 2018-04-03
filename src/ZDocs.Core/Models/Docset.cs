@@ -12,7 +12,7 @@ namespace ZDocs.Core.Models
         }
 
         [JsonIgnore]
-        public long Id { get; set; }
+        public int Id { get; set; }
 
         public string Name { get; set; }
         public string Revision { get; set; }

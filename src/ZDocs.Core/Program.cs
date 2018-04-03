@@ -9,7 +9,7 @@ namespace ZDocs.Core
 {
     public class Program
     {
-        public static ICollection<Docset> Doctsets { get; set; }
+        public static ICollection<Docset> Doctsets { get; private set; }
 
         public static void LoadDocsets(string source = "docsets")
         {
@@ -19,10 +19,11 @@ namespace ZDocs.Core
 
             var docsetDir = new DirectoryInfo(source);
 #if DEBUG
-            docsetDir = new DirectoryInfo(@"C:\Program Files\Zeal\docsets");
+            docsetDir = new DirectoryInfo(@"C:\Users\ennerperez\Downloads\Zeal\docsets");
 #endif
             var collectiom = docsetDir.GetDirectories("*.docset");
 
+            var index = 1;
             foreach (var item in collectiom)
             {
                 var contents = new DirectoryInfo(Path.Combine(item.FullName, "Contents"));
@@ -34,6 +35,7 @@ namespace ZDocs.Core
                 var license = Path.Combine(resources.FullName, "LICENSE");
 
                 var docSet = Newtonsoft.Json.JsonConvert.DeserializeObject<Docset>(File.ReadAllText(meta));
+                docSet.Id = index;
 
                 docSet.Path = contents.FullName;
 
@@ -44,6 +46,7 @@ namespace ZDocs.Core
                 docSet.Icons = icons.Select(m => m.FullName).ToList();
 
                 Doctsets.Add(docSet);
+                index++;
             }
         }
 
