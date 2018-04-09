@@ -1,10 +1,10 @@
-![logo](src/.editoricon.png)
+![logo](.editoricon.png)
 
-# ZDocs
+# Docset Toolkit
 
-Offline documentation browser
+Offline documentation browser toolkit.
 
-[![Build status](https://ci.appveyor.com/api/projects/status/u65drklkkpxq7cao?svg=true)](https://ci.appveyor.com/project/ennerperez/zdocs)
+[![Build status](https://ci.appveyor.com/api/projects/status/fw5hvvbfds5lmndt?svg=true)](https://ci.appveyor.com/project/ennerperez/docset-toolkit)
 
 ---------------------------------------
 
@@ -25,17 +25,17 @@ See the [changelog](CHANGELOG.md) for changes.
 
 ### What's included
 
-- ZDocs executable
+- DocsetToolkit executable
 
 ### Quick start
 
 Just download last release not installation required:
 
-* [Download the latest release](https://github.com/ennerperez/zdocs/releases/).
+* [Download the latest release](https://github.com/ennerperez/docset-toolkit/releases/).
 
 ### Bugs and feature requests
 
-Have a bug or a feature request? Please first search for existing and closed issues. If your problem or idea is not addressed yet, [please open a new issue](https://github.com/ennerperez/zdocs/issues/new).
+Have a bug or a feature request? Please first search for existing and closed issues. If your problem or idea is not addressed yet, [please open a new issue](https://github.com/ennerperez/docset-toolkit/issues/new).
 
 ### Documentation
 
@@ -44,4 +44,3 @@ No more documentation required for now.
 ### License
 
 Code released under [The MIT License](LICENSE)
-
