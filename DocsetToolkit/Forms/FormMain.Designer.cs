@@ -46,11 +46,19 @@
         	this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
         	this.toolStripButtonDocsets = new System.Windows.Forms.ToolStripDropDownButton();
         	this.toolStripButtonUpdates = new System.Windows.Forms.ToolStripButton();
+        	this.toolStripButtonSearch = new System.Windows.Forms.ToolStripButton();
+        	this.toolStripButtonIndex = new System.Windows.Forms.ToolStripButton();
         	this.toolTipMain = new System.Windows.Forms.ToolTip(this.components);
         	this.saveFileDialogMain = new System.Windows.Forms.SaveFileDialog();
         	this.openFileDialogMain = new System.Windows.Forms.OpenFileDialog();
         	this.helpProviderMain = new System.Windows.Forms.HelpProvider();
+        	this.treeListViewIndex = new BrightIdeasSoftware.TreeListView();
+        	this.panelSearch = new System.Windows.Forms.Panel();
+        	this.textBoxSearch = new System.Windows.Forms.TextBox();
+        	this.buttonDoSearch = new System.Windows.Forms.Button();
         	this.toolStripMenu.SuspendLayout();
+        	((System.ComponentModel.ISupportInitialize)(this.treeListViewIndex)).BeginInit();
+        	this.panelSearch.SuspendLayout();
         	this.SuspendLayout();
         	// 
         	// toolStripMenu
@@ -68,7 +76,9 @@
 			this.toolStripButtonFile,
 			this.toolStripSeparator8,
 			this.toolStripButtonDocsets,
-			this.toolStripButtonUpdates});
+			this.toolStripButtonUpdates,
+			this.toolStripButtonSearch,
+			this.toolStripButtonIndex});
         	this.toolStripMenu.Location = new System.Drawing.Point(0, 0);
         	this.toolStripMenu.Name = "toolStripMenu";
         	this.toolStripMenu.Padding = new System.Windows.Forms.Padding(0);
@@ -223,6 +233,35 @@
         	this.toolStripButtonUpdates.Text = "&Updates";
         	this.toolStripButtonUpdates.Click += new System.EventHandler(this.ToolStripButtonUpdates_Click);
         	// 
+        	// toolStripButtonSearch
+        	// 
+        	this.toolStripButtonSearch.AutoSize = false;
+        	this.toolStripButtonSearch.CheckOnClick = true;
+        	this.toolStripButtonSearch.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+        	this.toolStripButtonSearch.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonSearch.Image")));
+        	this.toolStripButtonSearch.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+        	this.toolStripButtonSearch.ImageTransparentColor = System.Drawing.Color.Magenta;
+        	this.toolStripButtonSearch.Margin = new System.Windows.Forms.Padding(0);
+        	this.toolStripButtonSearch.Name = "toolStripButtonSearch";
+        	this.toolStripButtonSearch.Size = new System.Drawing.Size(48, 48);
+        	this.toolStripButtonSearch.Text = "&Search";
+        	this.toolStripButtonSearch.Click += new System.EventHandler(this.toolStripButtonSearch_Click);
+        	// 
+        	// toolStripButtonIndex
+        	// 
+        	this.toolStripButtonIndex.AutoSize = false;
+        	this.toolStripButtonIndex.CheckOnClick = true;
+        	this.toolStripButtonIndex.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+        	this.toolStripButtonIndex.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonIndex.Image")));
+        	this.toolStripButtonIndex.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+        	this.toolStripButtonIndex.ImageTransparentColor = System.Drawing.Color.Magenta;
+        	this.toolStripButtonIndex.Margin = new System.Windows.Forms.Padding(0);
+        	this.toolStripButtonIndex.Name = "toolStripButtonIndex";
+        	this.toolStripButtonIndex.Size = new System.Drawing.Size(48, 48);
+        	this.toolStripButtonIndex.Text = "&Index";
+        	this.toolStripButtonIndex.Visible = false;
+        	this.toolStripButtonIndex.CheckStateChanged += new System.EventHandler(this.toolStripButtonIndex_CheckStateChanged);
+        	// 
         	// saveFileDialogMain
         	// 
         	this.saveFileDialogMain.DefaultExt = "jpg";
@@ -241,12 +280,72 @@
         	this.openFileDialogMain.Tag = "";
         	this.openFileDialogMain.Title = "Open...";
         	// 
+        	// treeListViewIndex
+        	// 
+        	this.treeListViewIndex.CellEditUseWholeCell = false;
+        	this.treeListViewIndex.Dock = System.Windows.Forms.DockStyle.Left;
+        	this.treeListViewIndex.EmptyListMsg = "";
+        	this.treeListViewIndex.FullRowSelect = true;
+        	this.treeListViewIndex.Location = new System.Drawing.Point(48, 0);
+        	this.treeListViewIndex.Name = "treeListViewIndex";
+        	this.treeListViewIndex.ShowGroups = false;
+        	this.treeListViewIndex.Size = new System.Drawing.Size(121, 441);
+        	this.treeListViewIndex.TabIndex = 12;
+        	this.treeListViewIndex.UseCompatibleStateImageBehavior = false;
+        	this.treeListViewIndex.View = System.Windows.Forms.View.Details;
+        	this.treeListViewIndex.VirtualMode = true;
+        	this.treeListViewIndex.Visible = false;
+        	this.treeListViewIndex.DoubleClick += new System.EventHandler(this.treeListViewIndex_DoubleClick);
+        	// 
+        	// panelSearch
+        	// 
+        	this.panelSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+        	this.panelSearch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(43)))), ((int)(((byte)(43)))));
+        	this.panelSearch.Controls.Add(this.textBoxSearch);
+        	this.panelSearch.Controls.Add(this.buttonDoSearch);
+        	this.panelSearch.Location = new System.Drawing.Point(390, 0);
+        	this.panelSearch.Margin = new System.Windows.Forms.Padding(0);
+        	this.panelSearch.Name = "panelSearch";
+        	this.panelSearch.Padding = new System.Windows.Forms.Padding(8);
+        	this.panelSearch.Size = new System.Drawing.Size(216, 48);
+        	this.panelSearch.TabIndex = 13;
+        	this.panelSearch.Visible = false;
+        	// 
+        	// textBoxSearch
+        	// 
+        	this.textBoxSearch.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+        	this.textBoxSearch.Dock = System.Windows.Forms.DockStyle.Fill;
+        	this.textBoxSearch.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+        	this.textBoxSearch.ForeColor = System.Drawing.SystemColors.ControlDark;
+        	this.textBoxSearch.Location = new System.Drawing.Point(8, 8);
+        	this.textBoxSearch.Margin = new System.Windows.Forms.Padding(0);
+        	this.textBoxSearch.Name = "textBoxSearch";
+        	this.textBoxSearch.Size = new System.Drawing.Size(168, 32);
+        	this.textBoxSearch.TabIndex = 15;
+        	this.textBoxSearch.Tag = "Search...";
+        	this.textBoxSearch.Text = "Search...";
+        	// 
+        	// buttonDoSearch
+        	// 
+        	this.buttonDoSearch.BackColor = System.Drawing.SystemColors.Window;
+        	this.buttonDoSearch.Dock = System.Windows.Forms.DockStyle.Right;
+        	this.buttonDoSearch.FlatAppearance.BorderColor = System.Drawing.SystemColors.ControlDarkDark;
+        	this.buttonDoSearch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+        	this.buttonDoSearch.Location = new System.Drawing.Point(176, 8);
+        	this.buttonDoSearch.Margin = new System.Windows.Forms.Padding(0);
+        	this.buttonDoSearch.Name = "buttonDoSearch";
+        	this.buttonDoSearch.Size = new System.Drawing.Size(32, 32);
+        	this.buttonDoSearch.TabIndex = 16;
+        	this.buttonDoSearch.UseVisualStyleBackColor = false;
+        	// 
         	// FormMain
         	// 
         	this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
         	this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         	this.BackColor = System.Drawing.SystemColors.Window;
         	this.ClientSize = new System.Drawing.Size(624, 441);
+        	this.Controls.Add(this.panelSearch);
+        	this.Controls.Add(this.treeListViewIndex);
         	this.Controls.Add(this.toolStripMenu);
         	this.MinimumSize = new System.Drawing.Size(640, 480);
         	this.Name = "FormMain";
@@ -257,13 +356,16 @@
         	this.Shown += new System.EventHandler(this.FormMain_Shown);
         	this.toolStripMenu.ResumeLayout(false);
         	this.toolStripMenu.PerformLayout();
+        	((System.ComponentModel.ISupportInitialize)(this.treeListViewIndex)).EndInit();
+        	this.panelSearch.ResumeLayout(false);
+        	this.panelSearch.PerformLayout();
         	this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        
+        private BrightIdeasSoftware.TreeListView treeListViewIndex;
         private System.Windows.Forms.ToolStrip toolStripMenu;
         private System.Windows.Forms.ToolStripButton toolStripButtonClose;
         private System.Windows.Forms.ToolStripButton toolStripButtonAbout;
@@ -284,6 +386,11 @@
         private System.Windows.Forms.SaveFileDialog saveFileDialogMain;
         private System.Windows.Forms.OpenFileDialog openFileDialogMain;
         private System.Windows.Forms.HelpProvider helpProviderMain;
+        private System.Windows.Forms.ToolStripButton toolStripButtonIndex;
+        private System.Windows.Forms.Panel panelSearch;
+        private System.Windows.Forms.TextBox textBoxSearch;
+        private System.Windows.Forms.Button buttonDoSearch;
+        private System.Windows.Forms.ToolStripButton toolStripButtonSearch;
     }
 }
 
