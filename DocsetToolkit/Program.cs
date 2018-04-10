@@ -10,6 +10,8 @@ using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using Toolkit.Contexts;
 using Toolkit.Models;
+using System.Threading.Tasks;
+using System.Data.Entity;
 
 namespace Toolkit
 {
@@ -22,7 +24,7 @@ namespace Toolkit
 #if NETFX_46
         internal static Dictionary<string, string> CommandArgs => ApplicationInfo.GetCommandLine();
 #else
-        internal static Dictionary<string, string> CommandArgs {get { return ApplicationInfo.GetCommandLine(); }}
+        internal static Dictionary<string, string> CommandArgs { get { return ApplicationInfo.GetCommandLine(); } }
 #endif
 
         [STAThread]
@@ -130,10 +132,16 @@ namespace Toolkit
                 Doctsets.Add(docSet);
                 index++;
             }
+
+            if (Doctsets != null && Doctsets.Any())
+                LoadDocsetIndex(Doctsets.First());
         }
 
-        public static ICollection<Index> LoadDocsetIndex(Docset source)
+        public static void LoadDocsetIndex(Docset source)
         {
+            if (source.Index != null && source.Index.Any())
+                return;
+
             var index = new List<Index>();
 
             var resources = new DirectoryInfo(Path.Combine(source.Path, "Resources"));
@@ -156,13 +164,80 @@ namespace Toolkit
                          }).ToList();
             }
             else
-            {
                 using (var context = IndexContext.Create("Data Source=" + dsidx + ";"))
-                {
                     index = context.SearchIndex.ToList();
-                }
+            source.Index = index;
+        }
+
+        public static async Task LoadDocsetsAsync(string source = "docsets")
+        {
+            if (!Directory.Exists(source)) Directory.CreateDirectory(source);
+
+            Doctsets = new HashSet<Docset>();
+
+            var docsetDir = new DirectoryInfo(source);
+            var collectiom = docsetDir.GetDirectories("*.docset");
+
+            var index = 1;
+            foreach (var item in collectiom)
+            {
+                var contents = new DirectoryInfo(Path.Combine(item.FullName, "Contents"));
+                var resources = new DirectoryInfo(Path.Combine(contents.FullName, "Resources"));
+
+                var meta = Path.Combine(item.FullName, "meta.json");
+                var icons = item.GetFiles("*.png");
+                var plist = Path.Combine(contents.FullName, "Info.plist");
+                var license = Path.Combine(resources.FullName, "LICENSE");
+
+                var docSet = Newtonsoft.Json.JsonConvert.DeserializeObject<Docset>(File.ReadAllText(meta));
+                docSet.Id = index;
+
+                docSet.Path = contents.FullName;
+
+                var plistBuffer = File.ReadAllBytes(plist);
+                docSet.Plist = PListNet.PList.Load(new MemoryStream(plistBuffer));
+
+                if (File.Exists(license)) docSet.License = File.ReadAllText(license);
+                docSet.Icons = icons.Select(m => m.FullName).ToList();
+
+                Doctsets.Add(docSet);
+                index++;
             }
-            return index;
+
+            if (Doctsets != null && Doctsets.Any())
+                await LoadDocsetIndexAsync(Doctsets.First());
+        }
+
+        public static async Task LoadDocsetIndexAsync(Docset source)
+        {
+            if (source.Index != null && source.Index.Any())
+                return;
+
+            var index = new List<Index>();
+
+            var resources = new DirectoryInfo(Path.Combine(source.Path, "Resources"));
+
+            var dsidx = Path.Combine(resources.FullName, "docSet.dsidx");
+            var nodes = Path.Combine(resources.FullName, "Tokens.xml");
+
+            if (File.Exists(nodes))
+            {
+                var serializer = new XmlSerializer(typeof(Tokens));
+                var reader = new StreamReader(nodes);
+                var tokens = (Tokens)serializer.Deserialize(reader);
+                reader.Close();
+                index = (from token in tokens.Token
+                         select new Index()
+                         {
+                             Name = token.TokenIdentifier.Name,
+                             Type = token.TokenIdentifier.Type,
+                             Path = token.Path
+                         }).ToList();
+            }
+            else
+                using (var context = IndexContext.Create("Data Source=" + dsidx + ";"))
+                    index = await context.SearchIndex.ToListAsync();
+            source.Index = index;
         }
     }
 }
