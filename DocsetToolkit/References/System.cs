@@ -1,7 +1,7 @@
 ﻿// ----------------------------------------
 // System References
-// Version 1.2.0
-// Updated 2018-04-09
+// Version 1.1.0
+// Updated 2017-12-26
 // ----------------------------------------
 
 using GitHub;
@@ -134,7 +134,7 @@ namespace System
             {
                 Bitmap bmp = new Bitmap(img.Width, img.Height);
                 using (Graphics gfx = Graphics.FromImage(bmp))
-                using (SolidBrush brush = new SolidBrush(Color.FromArgb(43, 43, 43)))
+                using (SolidBrush brush = new SolidBrush(Toolkit.Properties.Settings.Default.BackgroundColor))
                 {
                     gfx.FillRectangle(brush, 0, 0, bmp.Width, bmp.Height);
                     gfx.DrawImage(img, 0, 0);
@@ -240,18 +240,12 @@ namespace System
 
             public override string ToString()
             {
-#if NETFX_46
                 return $"https://github.com/{Owner}/{Repo}";
-#else
-                return "https://github.com/" + Owner + "/" + Repo;
-#endif
             }
         }
 
         internal static class ApplicationInfo
         {
-#if NETFX_46
-
             public static Assembly Assembly => Assembly.GetCallingAssembly();
 
             public static Version Version => ApplicationInfo.Assembly.GetName().Version;
@@ -262,19 +256,6 @@ namespace System
             public static string Company => ApplicationInfo.Assembly.GetCustomAttribute<AssemblyCompanyAttribute>().Company;
 
             public static string Guid => ApplicationInfo.Assembly.GetCustomAttribute<GuidAttribute>().Value;
-
-#else
-            public static Assembly Assembly { get {return  Assembly.GetCallingAssembly();}}
-
-            public static Version Version { get {return  ApplicationInfo.Assembly.GetName().Version;}}
-            public static string Title { get {return  ApplicationInfo.Assembly.GetCustomAttribute<AssemblyTitleAttribute>().Title;}}
-            public static string Product { get {return  ApplicationInfo.Assembly.GetCustomAttribute<AssemblyProductAttribute>().Product;}}
-            public static string Description { get {return  ApplicationInfo.Assembly.GetCustomAttribute<AssemblyDescriptionAttribute>().Description;}}
-            public static string Copyright { get {return  ApplicationInfo.Assembly.GetCustomAttribute<AssemblyCopyrightAttribute>().Copyright;}}
-			public static string Company { get {return  ApplicationInfo.Assembly.GetCustomAttribute<AssemblyCompanyAttribute>().Company;}}
-
-			public static string Guid { get { return ApplicationInfo.Assembly.GetCustomAttribute<GuidAttribute>().Value;}}
-#endif
 
             internal static Dictionary<string, string> GetCommandLine()
             {
@@ -296,19 +277,11 @@ namespace System
 
         internal static class GitHubInfo
         {
-#if NETFX_46
-
             public static string Repo => ApplicationInfo.Assembly.GetCustomAttribute<GitHubAttribute>().ToString();
             public static string Owner => ApplicationInfo.Assembly.GetCustomAttribute<GitHubAttribute>().Owner;
             public static string Name => ApplicationInfo.Assembly.GetCustomAttribute<GitHubAttribute>().Repo;
             public static string AssetName => ApplicationInfo.Assembly.GetCustomAttribute<GitHubAttribute>().AssetName;
 
-#else
-            public static string Repo { get { return ApplicationInfo.Assembly.GetCustomAttribute<GitHubAttribute>().ToString(); } }
-            public static string Owner { get { return ApplicationInfo.Assembly.GetCustomAttribute<GitHubAttribute>().Owner; } }
-            public static string Name { get { return ApplicationInfo.Assembly.GetCustomAttribute<GitHubAttribute>().Repo; } }
-            public static string AssetName { get { return ApplicationInfo.Assembly.GetCustomAttribute<GitHubAttribute>().AssetName; } }
-#endif
             public static Release LatestRelease { get; set; }
 
             public async static Task<Release> GetLatestReleaseAsync()
@@ -317,11 +290,7 @@ namespace System
                 {
                     using (var client = new HttpClient())
                     {
-#if NETFX_46
                         var url = new Uri($"https://api.github.com/repos/{GitHubInfo.Owner}/{GitHubInfo.Name}/releases/latest");
-#else
-                        var url = new Uri("https://api.github.com/repos/" + GitHubInfo.Owner + "/" + GitHubInfo.Name + "/releases/latest");
-#endif
                         client.DefaultRequestHeaders.Add("User-Agent", ApplicationInfo.Title);
                         var response = await client.GetAsync(url);
                         if (response.IsSuccessStatusCode)
@@ -348,11 +317,7 @@ namespace System
                         if (MessageBox.Show(updateMessage, ApplicationInfo.Title, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                         {
                             var assetName = GitHubInfo.AssetName;
-#if NETFX_46
                             if (string.IsNullOrEmpty(assetName)) assetName = $"{ApplicationInfo.Product}.zip";
-#else
-                            if (string.IsNullOrEmpty(assetName)) assetName = ApplicationInfo.Product + ".zip";
-#endif
                             var assetUrl = LatestRelease.Assets.FirstOrDefault(m => m.Name == assetName);
                             var url = LatestRelease.AssetsUrl;
                             if (assetUrl != null) url = assetUrl.BrowserDownloadUrl;
@@ -369,12 +334,7 @@ namespace System
 
             public static Version GetVersion(this Release release)
             {
-#if NETFX_46
                 Version.TryParse(release.TagName.Replace("v", ""), out Version result);
-#else
-                Version result;
-                Version.TryParse(release.TagName.Replace("v", ""), out result);
-#endif
                 return result;
             }
         }

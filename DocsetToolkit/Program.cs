@@ -12,6 +12,7 @@ using Toolkit.Contexts;
 using Toolkit.Models;
 using System.Threading.Tasks;
 using System.Data.Entity;
+using Toolkit.ViewModels;
 
 namespace Toolkit
 {
@@ -38,6 +39,8 @@ namespace Toolkit
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            var zeal = LoadExternalsDocsets();
+            
             if (IsNewInstance)
                 LoadApp();
             else
@@ -239,5 +242,23 @@ namespace Toolkit
                     index = await context.SearchIndex.ToListAsync();
             source.Index = index;
         }
+    
+    	public static IEnumerable<DocsetViewModel> LoadExternalsDocsets()
+		{
+    		var results = new List<DocsetViewModel>();
+			var zeal_result = new List<ZealDocsetViewModel>();
+			#if DEBUG
+			var json = System.IO.File.ReadAllText(@"..\..\data\zeal.json");
+			zeal_result = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ZealDocsetViewModel>>(json);
+			#endif
+			results.AddRange((from item in zeal_result
+			                 select new DocsetViewModel()
+			                 {
+			                 	 Title = item.Title,
+			                 	 Icon = item.Icon2X,
+			                 	 Version = item.Versions.Where(m=> !string.IsNullOrEmpty(m)).Max(m=> m) // Version.Parse(m)).ToString()
+			                 }).ToArray());
+			return results;
+		}
     }
 }
